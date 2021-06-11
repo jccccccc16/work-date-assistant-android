@@ -20,6 +20,8 @@ public class CalendarAssistant {
 
     private WorkCalendar currentWorkCalendar;
 
+
+
     // 保存每一个生成的workCalendar，Integer为月份，
     private Map<Integer,WorkCalendar> workCalendarMap = new HashMap<Integer, WorkCalendar>();
 
@@ -42,6 +44,14 @@ public class CalendarAssistant {
         this.calendar = calendar;
         // 默认两班制
         strategy = new TwoWorkTypeStrategy();
+    }
+
+    public void setCurrentWorkCalendar(WorkCalendar currentWorkCalendar){
+        this.currentWorkCalendar = currentWorkCalendar;
+    }
+
+    public WorkCalendar getCurrentWorkCalendar(){
+        return this.currentWorkCalendar;
     }
 
 
@@ -79,7 +89,7 @@ public class CalendarAssistant {
         int totalDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
         // 创建workCalendar对象
-        WorkCalendar workCalendar = new WorkCalendar(calendarMapper, getNextMothFirstDayWorkType, month, spaceAmount,totalDay);
+        WorkCalendar workCalendar = new WorkCalendar(calendarMapper, getNextMothFirstDayWorkType, month,day, spaceAmount,totalDay);
 
         // 判断workCalendarMap是否有该workCalendar
         // 如果不包含
@@ -109,6 +119,7 @@ public class CalendarAssistant {
         }else{
             Log.i("getNextWorkCalendar","返回下一月份， "+nextMonth+" 月份: "+thisMonthWorkCalendar);
             WorkCalendar workCalendar = createCalendar(nextMothFirstDayWorkType, nextMonth, 1);
+            calendarAssistant.setCurrentWorkCalendar(workCalendar);
             workCalendarMap.put(nextMonth,workCalendar);
             return workCalendar;
         }
@@ -127,10 +138,11 @@ public class CalendarAssistant {
         Integer nextMothFirstDayWorkType = thisMonthWorkCalendar.getNextMothFirstDayWorkType();
 
 
-        Integer nextMonth = thisMonth -1;
+        Integer lastMonth = thisMonth -1;
         // 如果存在
-        if(workCalendarMap.containsKey(nextMonth)){
-            WorkCalendar workCalendar = workCalendarMap.get(nextMonth);
+        if(workCalendarMap.containsKey(lastMonth)){
+            WorkCalendar workCalendar = workCalendarMap.get(lastMonth);
+            calendarAssistant.setCurrentWorkCalendar(workCalendar);
             Log.i("getLastWorkCalendar","返回上一个workCalendar: "+workCalendar);
             return workCalendar;
             // // 如果没有，那么直接返回当前月的
@@ -147,6 +159,8 @@ public class CalendarAssistant {
         int year = calendar.get(Calendar.YEAR);
         calendar.set(year, month - 1, day);
     }
+
+
 
 
     /**

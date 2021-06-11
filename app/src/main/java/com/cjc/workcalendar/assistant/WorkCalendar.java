@@ -19,9 +19,12 @@ public class WorkCalendar implements Serializable {
     // 这个月有多少天
     private Integer dayAmount;
 
+    private Integer currentDay;
+
     public WorkCalendar(Map<Integer,String> dayWorkTypeMapper,
                         Integer nextMothFirstDayWorkType,
                         Integer currentMonth,
+                        Integer currentDay,
                         Integer spaceAmount,
                         Integer dayAmount){
         this.dayWorkTypeMapper = dayWorkTypeMapper;
@@ -29,6 +32,7 @@ public class WorkCalendar implements Serializable {
         this.currentMonth = currentMonth;
         this.spaceAmount = spaceAmount;
         this.dayAmount = dayAmount;
+        this.currentDay = currentDay;
     }
 
     public Map<Integer, String> getDayWorkTypeMapper() {
@@ -71,6 +75,14 @@ public class WorkCalendar implements Serializable {
         this.dayAmount = dayAmount;
     }
 
+    public Integer getCurrentDay() {
+        return currentDay;
+    }
+
+    public void setCurrentDay(Integer currentDay) {
+        this.currentDay = currentDay;
+    }
+
     @Override
     public String toString() {
         return "WorkCalendar{" +
@@ -79,6 +91,7 @@ public class WorkCalendar implements Serializable {
                 ", currentMonth=" + currentMonth +
                 ", spaceAmount=" + spaceAmount +
                 ", dayAmount=" + dayAmount +
+                ", currentDay=" + currentDay +
                 '}';
     }
 }

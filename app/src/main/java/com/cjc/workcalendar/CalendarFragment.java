@@ -90,7 +90,7 @@ public class CalendarFragment extends Fragment {
     private void updateData(WorkCalendar newWorkCalendar){
         this.currentWorkCalendar = newWorkCalendar;
         this.currentMonth = newWorkCalendar.getCurrentMonth();
-
+        currentWorkCalendar = newWorkCalendar;
     }
 
     private void showCalendar(WorkCalendar workCalendar,View view){
@@ -167,6 +167,7 @@ public class CalendarFragment extends Fragment {
 
                 synchronized (this){
                     WorkCalendar nextWorkCalendar = calendarAssistant.getNextWorkCalendar(currentWorkCalendar);
+                    // 更新为当前workCalendar
 
                     // 显示fragment
                     updateCalendar(nextWorkCalendar);
@@ -183,6 +184,7 @@ public class CalendarFragment extends Fragment {
             public void onClick(View view) {
                 synchronized (this){
                     WorkCalendar lastWorkCalendar = calendarAssistant.getLastWorkCalendar(currentWorkCalendar);
+                    // 更新为当前workCalendar
                     updateCalendar(lastWorkCalendar);
                 }
 

@@ -87,3 +87,58 @@ public class SpinnerActivity extends Activity {
 
 
 
+### bug
+
+2021/6/11
+
+当不停点击下一个月是，会出现currentWorkCalendar为空的错误
+
+```java
+// CalendarFragment.class
+lastBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                synchronized (this){
+                    WorkCalendar lastWorkCalendar = calendarAssistant.getLastWorkCalendar(currentWorkCalendar);
+                    updateCalendar(lastWorkCalendar);
+                }
+
+            }
+        });
+```
+
+解决：
+
+添加static保证单例
+
+```java
+private static WorkCalendar currentWorkCalendar;
+```
+
+2021/6/11
+
+当点击下一个月时，然后改变workType，会跳转到第一个月份
+
+
+
+解决：
+
+在calendarAssistant中添加currentWorkCalendar的属性，static修饰，唯一，当点击上一月或者下一月时，更新currentWorkCalendar
+
+```java
+// CalendarFragment
+// 更新月份，和workCalendar
+    private void updateData(WorkCalendar newWorkCalendar){
+        this.currentWorkCalendar = newWorkCalendar;
+        this.currentMonth = newWorkCalendar.getCurrentMonth();
+        currentWorkCalendar = newWorkCalendar;
+    }
+```
+
+
+
+
+
+### 新的需求
+
+用户，点击界面中的某一号数，可以改变号数的workType，该号数往后的工作日的workType跟着改变

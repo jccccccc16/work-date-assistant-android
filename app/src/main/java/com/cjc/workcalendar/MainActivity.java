@@ -26,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private Spinner workTypeSpinner;
     private CalendarAssistant calendarAssistant;
 
+    private WorkCalendar currentWorkCalendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         // 初始化代码
         // 初始化calendarAssistant
         calendarAssistant = CalendarAssistant.getCalendarAssistant();
-
         // 获取策略名称
         String[] strategyNames = StrategyFactory.strategyNames;
         workPatternSpinner = findViewById(R.id.patternSpinner);
@@ -79,8 +80,15 @@ public class MainActivity extends AppCompatActivity {
                 // 显示日历
                 // 获取当前日工作类型
                 Integer workTypeNum = index;
-                // 得到工作日历
-                WorkCalendar workCalendar = calendarAssistant.createCalendar(workTypeNum, null, null);
+                WorkCalendar currentWorkCalendar = calendarAssistant.getCurrentWorkCalendar();
+                if(currentWorkCalendar==null){
+                    // 得到工作日历
+                    currentWorkCalendar = calendarAssistant.createCalendar(workTypeNum, null, null);
+                    calendarAssistant.setCurrentWorkCalendar(currentWorkCalendar);
+                }else{
+                    currentWorkCalendar = calendarAssistant.createCalendar(workTypeNum, currentWorkCalendar.getCurrentMonth(),currentWorkCalendar.getCurrentDay() );
+                    calendarAssistant.setCurrentWorkCalendar(currentWorkCalendar);
+                }
 
                 // 唤起CalendarFragment进行显示
                 FragmentManager fragmentManager = getFragmentManager();
@@ -88,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 CalendarFragment calendarFragment = new CalendarFragment();
                 fragmentTransaction.replace(R.id.fragment,calendarFragment);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable(CalendarFragment.STRING_WORK_CALENDAR,workCalendar);
+                bundle.putSerializable(CalendarFragment.STRING_WORK_CALENDAR,currentWorkCalendar);
                 calendarFragment.setArguments(bundle);
                 fragmentTransaction.commit();
             }

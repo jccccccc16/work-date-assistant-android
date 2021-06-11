@@ -18,6 +18,8 @@ public class CalendarAssistant {
 
     private Calendar calendar;
 
+    private WorkCalendar currentWorkCalendar;
+
     // 保存每一个生成的workCalendar，Integer为月份，
     private Map<Integer,WorkCalendar> workCalendarMap = new HashMap<Integer, WorkCalendar>();
 
@@ -118,6 +120,8 @@ public class CalendarAssistant {
      * @return
      */
     public WorkCalendar getLastWorkCalendar(WorkCalendar thisMonthWorkCalendar){
+
+
 
         Integer thisMonth = thisMonthWorkCalendar.getCurrentMonth();
         Integer nextMothFirstDayWorkType = thisMonthWorkCalendar.getNextMothFirstDayWorkType();

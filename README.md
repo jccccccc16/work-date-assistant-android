@@ -1,4 +1,4 @@
-下拉菜单
+### 下拉菜单
 
 网上示例：
 
@@ -85,5 +85,5 @@ public class SpinnerActivity extends Activity {
 
 
 
-应用：
+
 

@@ -33,7 +33,7 @@ public class CalendarFragment extends Fragment {
     private TextView monthTextView;
     private CalendarAssistant calendarAssistant;
     private Integer currentMonth;
-    private WorkCalendar currentWorkCalendar;
+    private static WorkCalendar currentWorkCalendar;
 
     private TableLayout tableLayout;
     private TextViewFactory textViewFactory;
@@ -164,12 +164,15 @@ public class CalendarFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                WorkCalendar nextWorkCalendar = calendarAssistant.getNextWorkCalendar(currentWorkCalendar);
+
+                synchronized (this){
+                    WorkCalendar nextWorkCalendar = calendarAssistant.getNextWorkCalendar(currentWorkCalendar);
+
+                    // 显示fragment
+                    updateCalendar(nextWorkCalendar);
+                }
 
 
-
-                // 显示fragment
-                updateCalendar(nextWorkCalendar);
 
 
             }
@@ -178,8 +181,11 @@ public class CalendarFragment extends Fragment {
         lastBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WorkCalendar lastWorkCalendar = calendarAssistant.getLastWorkCalendar(currentWorkCalendar);
-                updateCalendar(lastWorkCalendar);
+                synchronized (this){
+                    WorkCalendar lastWorkCalendar = calendarAssistant.getLastWorkCalendar(currentWorkCalendar);
+                    updateCalendar(lastWorkCalendar);
+                }
+
             }
         });
 

@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.cjc.workcalendar.assistant.CalendarAssistant;
 import com.cjc.workcalendar.assistant.WorkCalendar;
+import com.cjc.workcalendar.assistant.strategy.WorkTypeStrategy;
 
 import java.util.Calendar;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class CalendarFragment extends Fragment {
     private TableLayout tableLayout;
     private TextViewFactory textViewFactory;
 
+    private TextView explainText;
+
 
 
     @Nullable
@@ -49,9 +52,12 @@ public class CalendarFragment extends Fragment {
         lastBtn =  inflate.findViewById(R.id.last_btn);
         tableLayout = inflate.findViewById(R.id.tableLayout);
         monthTextView = inflate.findViewById(R.id.month_tv);
-        textViewFactory = new TextViewFactory(inflate.getContext());
+        explainText = inflate.findViewById(R.id.explain_tv);
         calendarAssistant = CalendarAssistant.getCalendarAssistant();
+        textViewFactory = new TextViewFactory(inflate.getContext(),calendarAssistant.getStrategy());
         currentMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+
+
         // 绑定按钮
         initButtonBind();
         // 初始化时，显示为空
@@ -90,6 +96,7 @@ public class CalendarFragment extends Fragment {
     private void showCalendar(WorkCalendar workCalendar,View view){
 
         monthTextView.setText(this.currentMonth +" 月");
+        explainText.setText(calendarAssistant.getStrategy().getColorExplanation());
 
         // 总天苏
         Integer dayAmount = workCalendar.getDayAmount();
@@ -203,27 +210,16 @@ public class CalendarFragment extends Fragment {
      */
     static class TextViewFactory{
 
-         enum Color{
-             BLUE,GREEN,GRAY,WHITE,YELLOW
-         }
         private Context context;
         private final Integer WIDTH = 50;
         private final Integer HEIGHT = 70;
         private final Integer TEXTSIZE = 24;
         private TextView textView;
-        /**
-         * BLUE：蓝色，早上
-         * GREEN：绿色，休息，
-         * GRAY：咖啡色，晚上
-         * YELLOW: 黄色，中午
-         * White：白色，不处理
-         */
-        private final Integer[] BLUE = {0,204,255};
-        private final Integer[] GRAY = {208,164,99};
-        private final Integer[] GREEN = {0,255,51};
-        private final Integer[] YELLOW = {247,247,9};
-        public TextViewFactory(Context context){
+        private WorkTypeStrategy strategy;
+
+        public TextViewFactory(Context context,WorkTypeStrategy strategy){
             this.context = context;
+            this.strategy = strategy;
         }
         public  TextView createTextView(String text,String workType){
             this.textView = new TextView(this.context);
@@ -240,13 +236,11 @@ public class CalendarFragment extends Fragment {
         }
 
         private void  setColor(String workType){
-            switch (workType){
-                case "早":textView.setBackgroundColor(android.graphics.Color.rgb(BLUE[0],BLUE[1],BLUE[2]));break;
-                case "晚":textView.setBackgroundColor(android.graphics.Color.rgb(GRAY[0],GRAY[1],GRAY[2]));break;
-                case "休":textView.setBackgroundColor(android.graphics.Color.rgb(GREEN[0],GREEN[1],GREEN[2]));break;
-                case "中":textView.setBackgroundColor(android.graphics.Color.rgb(YELLOW[0],YELLOW[1],YELLOW[2]));break;
-                case "":
+            if(!workType.equals("")){
+                Integer[] color = strategy.getColorByWorkType(workType);
+                textView.setBackgroundColor(android.graphics.Color.rgb(color[0],color[1],color[2]));
             }
+
         }
 
 

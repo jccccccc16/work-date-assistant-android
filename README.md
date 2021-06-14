@@ -115,9 +115,15 @@ lastBtn.setOnClickListener(new View.OnClickListener() {
 private static WorkCalendar currentWorkCalendar;
 ```
 
-2021/6/11
 
-当点击下一个月时，然后改变workType，会跳转到第一个月份
+
+2021/6/14
+
+bug：当点击下一个月时，然后改变workType，会跳转到第一个月份
+
+
+
+
 
 
 

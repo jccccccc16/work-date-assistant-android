@@ -18,7 +18,7 @@ public class CalendarAssistant {
 
     private Calendar calendar;
 
-    private WorkCalendar currentWorkCalendar;
+    private static WorkCalendar currentWorkCalendar;
 
 
 
